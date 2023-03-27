@@ -1,0 +1,8 @@
+<h1>User</h1>
+{{user.login}}
+<h1>Encrypted</h1>
+<form method="post" action="{{path('test.decTest')}}">
+<textarea name="user">{{encryptedUser}}</textarea>
+<button class="ui button">Decrypt</button>
+</form>
+

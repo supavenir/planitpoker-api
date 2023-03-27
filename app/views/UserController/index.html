@@ -1,0 +1,23 @@
+<h1>Utilisateurs</h1>
+<a href="{{path('user.add')}}" class="ui button" data-target=".response">
+    <i class="plus icon"></i>
+    Ajouter un utilisateur
+</a>
+<ul>
+    {% for u in users %}
+    <li>
+        <a data-target='.response' href="{{path('user.one',[u.id])}}">{{u.email}}</a>
+        <a href="" class="ui circular basic button" data-target=".response">
+            <i class="edit icon"></i>
+            Modifier
+            </a>
+        <a href="{{path('user.remove',[u.id])}}" data-target="#app">
+            <i class="trash red icon"></i>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="ui segment response"></div>
+
+{{ script_foot | raw }}

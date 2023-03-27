@@ -1,0 +1,18 @@
+{% block menu %}
+<div class="ui secondary menu">
+    <a href="{{ path(routeNamePrefix ~ 'crud.home') }}" data-target="main .container" class="active item _home">Home</a>
+    {% if nav %}
+        <div class="item">{{ nav|raw }}</div>
+    {% endif %}
+</div>
+{% endblock %}
+<div class="ui basic crud segment">
+    {% block items %}
+        <div class="ui {{ type }}">
+            {% for item in items %}
+                {{ item|raw }}
+            {% endfor %}
+        </div>
+    {% endblock %}
+</div>
+{{ script_foot|raw }}

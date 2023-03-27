@@ -1,0 +1,15 @@
+<form class="ui form" action="{{path('user.submitAdd')}}" method="post">
+    <div class="field">
+        <label for="login">Login</label>
+        <input class="ui input" type="text" name="login" id="login" value="{{user.login}}">
+    </div>
+    <div class="field">
+        <label for="password">Password</label>
+        <input class="ui input" type="password" name="password" id="password">
+    </div>
+    <div class="field">
+        <label for="email">Email</label>
+        <input class="ui input" type="email" name="email" id="email" value="{{user.email}}">
+    </div>
+    <button class="ui positive button">Valider</button>
+</form>
