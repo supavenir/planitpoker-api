@@ -133,6 +133,5 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 			throw new \Exception('Unauthorized', 401);
 		}
 	}
-
 }
 

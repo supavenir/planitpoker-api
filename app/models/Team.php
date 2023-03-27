@@ -38,76 +38,63 @@ class Team{
 	#[JoinTable(name: "team_users")]
 	private $users;
 
-
 	 public function __construct(){
 		$this->rooms = [];
 		$this->users = [];
 	}
 
-
 	public function getId(){
 		return $this->id;
 	}
-
 
 	public function setId($id){
 		$this->id=$id;
 	}
 
-
 	public function getName(){
 		return $this->name;
 	}
-
 
 	public function setName($name){
 		$this->name=$name;
 	}
 
-
 	public function getRooms(){
 		return $this->rooms;
 	}
 
-
 	public function setRooms($rooms){
 		$this->rooms=$rooms;
 	}
-
 
 	 public function addToRooms($room){
 		$this->rooms[]=$room;
 		$room->setTeam($this);
 	}
 
-
 	public function getUser(){
 		return $this->user;
 	}
-
 
 	public function setUser($user){
 		$this->user=$user;
 	}
 
-
 	public function getUsers(){
 		return $this->users;
 	}
-
 
 	public function setUsers($users){
 		$this->users=$users;
 	}
 
-
 	 public function addUser($user){
 		$this->users[]=$user;
 	}
 
-
 	 public function __toString(){
 		return ($this->name??'no value').'';
 	}
+
 
 }

@@ -57,134 +57,110 @@ class Room{
 	#[JoinColumn(className: "models\\User",name: "idOwner")]
 	private $user;
 
-
 	 public function __construct(){
 		$this->configurations = [];
 		$this->permissions = [];
 		$this->storys = [];
 	}
 
-
 	public function getId(){
 		return $this->id;
 	}
-
 
 	public function setId($id){
 		$this->id=$id;
 	}
 
-
 	public function getName(){
 		return $this->name;
 	}
-
 
 	public function setName($name){
 		$this->name=$name;
 	}
 
-
 	public function getDescription(){
 		return $this->description;
 	}
-
 
 	public function setDescription($description){
 		$this->description=$description;
 	}
 
-
 	public function getPoints(){
 		return $this->points;
 	}
-
 
 	public function setPoints($points){
 		$this->points=$points;
 	}
 
-
 	public function getConfigurations(){
 		return $this->configurations;
 	}
 
-
 	public function setConfigurations($configurations){
 		$this->configurations=$configurations;
 	}
-
 
 	 public function addToConfigurations($configuration){
 		$this->configurations[]=$configuration;
 		$configuration->setRoom($this);
 	}
 
-
 	public function getPermissions(){
 		return $this->permissions;
 	}
 
-
 	public function setPermissions($permissions){
 		$this->permissions=$permissions;
 	}
-
 
 	 public function addToPermissions($permission){
 		$this->permissions[]=$permission;
 		$permission->setRoom($this);
 	}
 
-
 	public function getStorys(){
 		return $this->storys;
 	}
 
-
 	public function setStorys($storys){
 		$this->storys=$storys;
 	}
-
 
 	 public function addToStorys($tory){
 		$this->storys[]=$tory;
 		$tory->setRoom($this);
 	}
 
-
 	public function getSuite(){
 		return $this->suite;
 	}
-
 
 	public function setSuite($suite){
 		$this->suite=$suite;
 	}
 
-
 	public function getTeam(){
 		return $this->team;
 	}
-
 
 	public function setTeam($team){
 		$this->team=$team;
 	}
 
-
 	public function getUser(){
 		return $this->user;
 	}
-
 
 	public function setUser($user){
 		$this->user=$user;
 	}
 
-
 	 public function __toString(){
 		return ($this->name??'no value').'';
 	}
+
 
 }
