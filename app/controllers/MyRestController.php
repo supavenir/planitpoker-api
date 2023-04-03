@@ -2,6 +2,7 @@
 
 namespace controllers;
 
+use models\Room;
 use models\User;
 use Ubiquity\attributes\items\rest\Authorization;
 use Ubiquity\attributes\items\router\Delete;
@@ -83,6 +84,7 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 	 * @authorization
 	 */
 	#[Post('{resource}', priority: 0)]
+    #[Authorization()]
 	public function add($resource) {
 		TransformersManager::startProd('transform');
 		parent::add_($resource);
@@ -119,12 +121,13 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 	 */
 	#[Post('connect', priority: 10)]
 	public function connect() {
-		if (URequest::has('login')) {
+		if (URequest::has('username')) {
 			DAO::$useTransformers = false;
-			$user = DAO::getOne(User::class, 'login= ?', false, [URequest::post('login')]);
+			$user = DAO::getOne(User::class, 'username= ?', false, [URequest::post('username')]);
 			DAO::$useTransformers = true;
 			if ($user && URequest::password_verify('password', $user->getPassword())) {
 				$tokenInfos = $this->server->connect();
+                TransformersManager::transformInstance($user,'toView');
 				$tokenInfos['user'] = $user;
 				echo $this->_format($tokenInfos);
 				return;
@@ -133,5 +136,44 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 			throw new \Exception('Unauthorized', 401);
 		}
 	}
+    #[Get('rooms/{room}/users', priority: 4000)]
+    public function getConnectedUsersInRoom(string $room){
+        $roomInstance = DAO::getOne(Room::class, 'name= ?', false, [$room]);
+        if(isset($roomInstance)){
+            $users = json_decode($roomInstance->getConnectedUsers(),true);
+            $this->getRestServer()->_setContentType('text/event-stream;charset=utf-8');
+            $this->getRestServer()->_header('Cache-Control', 'no-cache, no-transform');
+            $this->getRestServer()->_header('X-Accel-Buffering', 'no');
+            echo "id: ".$roomInstance->getId()."\n";
+            echo "event: message\n";
+            echo "data: ".json_encode($users)."\n\n";
+        }
+    }
+
+    #[Post('rooms/{room}/users/{userId}', priority: 10)]
+    public function enterInRoom(string $room, int $userId){
+        $roomInstance = DAO::getOne(Room::class, 'name= ?', false, [$room]);
+        if (isset($roomInstance)) {
+            $user = DAO::getById(User::class,$userId,false);
+            if (isset($user)) {
+                $roomInstance->addConnectedUser($user);
+                DAO::save($roomInstance);
+                echo $this->_format($roomInstance);
+            }
+        }
+    }
+
+    #[Delete('rooms/{room}/users/{userId}', priority: 10)]
+    public function leaveRoom(string $room, int $userId){
+        $roomInstance = DAO::getOne(Room::class, 'name= ?', false, [$room]);
+        if (isset($roomInstance)) {
+            $user = DAO::getById(User::class,$userId,false);
+            if (isset($user)) {
+                $roomInstance->removeConnectedUser($user);
+                DAO::save($roomInstance);
+                echo $this->_format($roomInstance);
+            }
+        }
+    }
 }
 

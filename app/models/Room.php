@@ -5,30 +5,52 @@ use Ubiquity\attributes\items\Id;
 use Ubiquity\attributes\items\Column;
 use Ubiquity\attributes\items\Validator;
 use Ubiquity\attributes\items\Table;
-use Ubiquity\attributes\items\OneToMany;
 use Ubiquity\attributes\items\ManyToOne;
 use Ubiquity\attributes\items\JoinColumn;
+use Ubiquity\attributes\items\OneToMany;
 
 #[Table(name: "room")]
 class Room{
 	
 	#[Id()]
-	#[Column(name: "id",dbType: "int(11)")]
+	#[Column(name: "id",dbType: "int")]
 	#[Validator(type: "id",constraints: ["autoinc"=>true])]
 	private $id;
 
 	
-	#[Column(name: "name",nullable: true,dbType: "varchar(100)")]
-	#[Validator(type: "length",constraints: ["max"=>"100"])]
+	#[Column(name: "name",dbType: "varchar(100)")]
+	#[Validator(type: "length",constraints: ["max"=>"100","notNull"=>true])]
 	private $name;
 
 	
-	#[Column(name: "description",nullable: true,dbType: "text")]
+	#[Column(name: "description",dbType: "text")]
+	#[Validator(type: "notNull",constraints: [])]
 	private $description;
 
 	
-	#[Column(name: "points",nullable: true,dbType: "tinyint(4)")]
+	#[Column(name: "points",dbType: "tinyint(4)")]
+	#[Validator(type: "notNull",constraints: [])]
 	private $points;
+
+	
+	#[Column(name: "connectedUsers",dbType: "text")]
+	#[Validator(type: "notNull",constraints: [])]
+	private $connectedUsers;
+
+	
+	#[ManyToOne()]
+	#[JoinColumn(className: "models\\Suite",name: "idSuite")]
+	private $suite;
+
+	
+	#[ManyToOne()]
+	#[JoinColumn(className: "models\\Team",name: "idTeam")]
+	private $team;
+
+	
+	#[ManyToOne()]
+	#[JoinColumn(className: "models\\User",name: "idOwner")]
+	private $user;
 
 	
 	#[OneToMany(mappedBy: "room",className: "models\\Configuration")]
@@ -41,21 +63,6 @@ class Room{
 	
 	#[OneToMany(mappedBy: "room",className: "models\\Story")]
 	private $storys;
-
-	
-	#[ManyToOne()]
-	#[JoinColumn(className: "models\\Suite",name: "idSuite")]
-	private $suite;
-
-	
-	#[ManyToOne()]
-	#[JoinColumn(className: "models\\Team",name: "idTeam",nullable: true)]
-	private $team;
-
-	
-	#[ManyToOne()]
-	#[JoinColumn(className: "models\\User",name: "idOwner")]
-	private $user;
 
 	 public function __construct(){
 		$this->configurations = [];
@@ -93,6 +100,40 @@ class Room{
 
 	public function setPoints($points){
 		$this->points=$points;
+	}
+
+
+	public function getConnectedUsers(){
+		return $this->connectedUsers;
+	}
+
+
+	public function setConnectedUsers($connectedUsers){
+		$this->connectedUsers=$connectedUsers;
+	}
+
+	public function getSuite(){
+		return $this->suite;
+	}
+
+	public function setSuite($suite){
+		$this->suite=$suite;
+	}
+
+	public function getTeam(){
+		return $this->team;
+	}
+
+	public function setTeam($team){
+		$this->team=$team;
+	}
+
+	public function getUser(){
+		return $this->user;
+	}
+
+	public function setUser($user){
+		$this->user=$user;
 	}
 
 	public function getConfigurations(){
@@ -134,29 +175,17 @@ class Room{
 		$tory->setRoom($this);
 	}
 
-	public function getSuite(){
-		return $this->suite;
-	}
+    public function addConnectedUser(User $user): void{
+         $connectedUsers=\json_decode($this->connectedUsers,true);
+         $connectedUsers[$user->getId()]=$user->_rest;
+        $this->connectedUsers=json_encode($connectedUsers);
+    }
 
-	public function setSuite($suite){
-		$this->suite=$suite;
-	}
-
-	public function getTeam(){
-		return $this->team;
-	}
-
-	public function setTeam($team){
-		$this->team=$team;
-	}
-
-	public function getUser(){
-		return $this->user;
-	}
-
-	public function setUser($user){
-		$this->user=$user;
-	}
+    public function removeConnectedUser(User $user): void{
+         $connectedUsers=\json_decode($this->connectedUsers,true);
+         unset($connectedUsers[$user->getId()]);
+        $this->connectedUsers=json_encode($connectedUsers);
+    }
 
 	 public function __toString(){
 		return ($this->name??'no value').'';
