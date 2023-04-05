@@ -5,15 +5,16 @@ use Ubiquity\attributes\items\Id;
 use Ubiquity\attributes\items\Column;
 use Ubiquity\attributes\items\Validator;
 use Ubiquity\attributes\items\Table;
+use Ubiquity\attributes\items\OneToMany;
 use Ubiquity\attributes\items\ManyToOne;
 use Ubiquity\attributes\items\JoinColumn;
-use Ubiquity\attributes\items\OneToMany;
 
+#[\AllowDynamicProperties()]
 #[Table(name: "room")]
 class Room{
 	
 	#[Id()]
-	#[Column(name: "id",dbType: "int")]
+	#[Column(name: "id",dbType: "int(11)")]
 	#[Validator(type: "id",constraints: ["autoinc"=>true])]
 	private $id;
 
@@ -38,6 +39,18 @@ class Room{
 	private $connectedUsers;
 
 	
+	#[OneToMany(mappedBy: "room",className: "models\\Configuration")]
+	private $configurations;
+
+	
+	#[OneToMany(mappedBy: "room",className: "models\\Permission")]
+	private $permissions;
+
+	
+	#[OneToMany(mappedBy: "room",className: "models\\Story")]
+	private $storys;
+
+	
 	#[ManyToOne()]
 	#[JoinColumn(className: "models\\Suite",name: "idSuite")]
 	private $suite;
@@ -52,17 +65,6 @@ class Room{
 	#[JoinColumn(className: "models\\User",name: "idOwner")]
 	private $user;
 
-	
-	#[OneToMany(mappedBy: "room",className: "models\\Configuration")]
-	private $configurations;
-
-	
-	#[OneToMany(mappedBy: "room",className: "models\\Permission")]
-	private $permissions;
-
-	
-	#[OneToMany(mappedBy: "room",className: "models\\Story")]
-	private $storys;
 
 	 public function __construct(){
 		$this->configurations = [];
@@ -70,33 +72,41 @@ class Room{
 		$this->storys = [];
 	}
 
+
 	public function getId(){
 		return $this->id;
 	}
+
 
 	public function setId($id){
 		$this->id=$id;
 	}
 
+
 	public function getName(){
 		return $this->name;
 	}
+
 
 	public function setName($name){
 		$this->name=$name;
 	}
 
+
 	public function getDescription(){
 		return $this->description;
 	}
+
 
 	public function setDescription($description){
 		$this->description=$description;
 	}
 
+
 	public function getPoints(){
 		return $this->points;
 	}
+
 
 	public function setPoints($points){
 		$this->points=$points;
@@ -112,84 +122,99 @@ class Room{
 		$this->connectedUsers=$connectedUsers;
 	}
 
-	public function getSuite(){
-		return $this->suite;
-	}
-
-	public function setSuite($suite){
-		$this->suite=$suite;
-	}
-
-	public function getTeam(){
-		return $this->team;
-	}
-
-	public function setTeam($team){
-		$this->team=$team;
-	}
-
-	public function getUser(){
-		return $this->user;
-	}
-
-	public function setUser($user){
-		$this->user=$user;
-	}
 
 	public function getConfigurations(){
 		return $this->configurations;
 	}
 
+
 	public function setConfigurations($configurations){
 		$this->configurations=$configurations;
 	}
+
 
 	 public function addToConfigurations($configuration){
 		$this->configurations[]=$configuration;
 		$configuration->setRoom($this);
 	}
 
+
 	public function getPermissions(){
 		return $this->permissions;
 	}
 
+
 	public function setPermissions($permissions){
 		$this->permissions=$permissions;
 	}
+
 
 	 public function addToPermissions($permission){
 		$this->permissions[]=$permission;
 		$permission->setRoom($this);
 	}
 
+
 	public function getStorys(){
 		return $this->storys;
 	}
 
+
 	public function setStorys($storys){
 		$this->storys=$storys;
 	}
+
 
 	 public function addToStorys($tory){
 		$this->storys[]=$tory;
 		$tory->setRoom($this);
 	}
 
-    public function addConnectedUser(User $user): void{
-         $connectedUsers=\json_decode($this->connectedUsers,true);
-         $connectedUsers[$user->getId()]=$user->_rest;
-        $this->connectedUsers=json_encode($connectedUsers);
-    }
 
-    public function removeConnectedUser(User $user): void{
-         $connectedUsers=\json_decode($this->connectedUsers,true);
-         unset($connectedUsers[$user->getId()]);
-        $this->connectedUsers=json_encode($connectedUsers);
-    }
+	public function getSuite(){
+		return $this->suite;
+	}
+
+
+	public function setSuite($suite){
+		$this->suite=$suite;
+	}
+
+
+	public function getTeam(){
+		return $this->team;
+	}
+
+
+	public function setTeam($team){
+		$this->team=$team;
+	}
+
+
+	public function getUser(){
+		return $this->user;
+	}
+
+
+	public function setUser($user){
+		$this->user=$user;
+	}
 
 	 public function __toString(){
 		return ($this->name??'no value').'';
 	}
 
+    public function addConnectedUser(User $user): void{
+         $connectedUsers=\json_decode($this->connectedUsers,true);
+         $connectedUsers[]=$user->_rest;
+        $this->connectedUsers=json_encode($connectedUsers);
+    }
+    public function removeConnectedUser(User $user): void{
+         $connectedUsers=\json_decode($this->connectedUsers,true);
+         $connectedUsers=\array_filter($connectedUsers,function($u) use ($user){
+			 return $u['id']!=$user->getId();
+		 });
+        $this->connectedUsers=\json_encode($connectedUsers);
+    }
 
 }

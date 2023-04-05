@@ -7,6 +7,7 @@ use Ubiquity\attributes\items\Validator;
 use Ubiquity\attributes\items\Table;
 use Ubiquity\attributes\items\OneToMany;
 
+#[\AllowDynamicProperties()]
 #[Table(name: "suite")]
 class Suite{
 	
@@ -33,58 +34,70 @@ class Suite{
 	#[OneToMany(mappedBy: "suite",className: "models\\Room")]
 	private $rooms;
 
+
 	 public function __construct(){
 		$this->rooms = [];
 	}
+
 
 	public function getId(){
 		return $this->id;
 	}
 
+
 	public function setId($id){
 		$this->id=$id;
 	}
+
 
 	public function getName(){
 		return $this->name;
 	}
 
+
 	public function setName($name){
 		$this->name=$name;
 	}
+
 
 	public function getPublic(){
 		return $this->public;
 	}
 
+
 	public function setPublic($public){
 		$this->public=$public;
 	}
+
 
 	public function getSuitevalues(){
 		return $this->suitevalues;
 	}
 
+
 	public function setSuitevalues($suitevalues){
 		$this->suitevalues=$suitevalues;
 	}
+
 
 	public function getRooms(){
 		return $this->rooms;
 	}
 
+
 	public function setRooms($rooms){
 		$this->rooms=$rooms;
 	}
+
 
 	 public function addToRooms($room){
 		$this->rooms[]=$room;
 		$room->setSuite($this);
 	}
 
+
 	 public function __toString(){
 		return ($this->name??'no value').'';
 	}
-
 
 }

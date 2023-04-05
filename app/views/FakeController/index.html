@@ -1,0 +1,54 @@
+<form class="ui form" method="post" action="{{ path('fake.create') }}">
+    <div class="three fields">
+        <div class="field">
+            <label for="nbUsers">Nombre d'utilisateurs</label>
+            <input type="number" name="nbUsers" id="nbUsers" placeholder="Nombre d'utilisateurs" value="{{ nbUsers }}">
+        </div>
+        <div class="field">
+            <label for="nbTeams">Nombre de teams</label>
+            <input type="number" name="nbTeams" id="nbTeams" placeholder="Nombre de teams" value="{{ nbTeams }}">
+        </div>
+        <div class="field">
+            <label for="nbUsersTeam">Users/team</label>
+            <input type="number" name="nbUsersTeam" id="nbUsersTeam" placeholder="Nombre de users par team" value="{{ nbUsersTeam }}">
+        </div>
+    </div>
+    <div class="three fields">
+
+        <div class="field">
+            <label for="nbRooms">Nombre de rooms</label>
+            <input type="number" name="nbRooms" id="nbRooms" placeholder="Nombre de rooms" value="{{ nbRooms }}">
+        </div>
+
+        <div class="field">
+            <label for="nbStoriesRoom">Stories/room</label>
+            <input type="number" name="nbStoriesRoom" id="nbStoriesRoom" placeholder="Nombre de stories par room" value="{{ nbStoriesRoom }}">
+        </div>
+        <div class="field">
+            <div class="ui checkbox">
+                <input type="checkbox" name="createVotes" id="createVotes" tabindex="0" class="hidden" checked>
+                <label for="createVotes">Créer votes</label>
+            </div>
+        </div>
+    </div>
+    {% if hasSuites %}
+        <div class="field">
+            <div class="ui checkbox">
+                <input type="checkbox" name="createSuites" id="createSuites" tabindex="0" class="hidden">
+                <label for="createSuites">Créer suites</label>
+            </div>
+        </div>
+    {% endif %}
+    {% if hasConfig %}
+        <div class="field">
+            <div class="ui checkbox">
+                <input type="checkbox" name="createConfig" id="createConfig" tabindex="0" class="hidden">
+                <label for="createConfig">Créer configuration</label>
+            </div>
+        </div>
+    {% endif %}
+    <div class="ui divider"></div>
+    <div class="field">
+        <button class="ui fluid green button" type="submit">Valider</button>
+    </div>
+</form>
