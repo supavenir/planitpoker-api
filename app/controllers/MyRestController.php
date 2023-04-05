@@ -138,7 +138,7 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 	}
     #[Get('rooms/{room}/users', priority: 4000)]
     public function getConnectedUsersInRoom(string $room){
-        $roomInstance = DAO::getOne(Room::class, 'name= ?', false, [$room]);
+        $roomInstance = DAO::getOne(Room::class, 'name= ? or uuid= ?', false, [$room,$room]);
         if(isset($roomInstance)){
             $users = json_decode($roomInstance->getConnectedUsers(),true);
             $this->getRestServer()->_setContentType('text/event-stream;charset=utf-8');
@@ -152,7 +152,7 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 
     #[Post('rooms/{room}/users/{userId}', priority: 10)]
     public function enterInRoom(string $room, int $userId){
-        $roomInstance = DAO::getOne(Room::class, 'name= ?', false, [$room]);
+        $roomInstance = DAO::getOne(Room::class, 'name= ? or uuid= ?', false, [$room,$room]);
         if (isset($roomInstance)) {
             $user = DAO::getById(User::class,$userId,false);
             if (isset($user)) {
@@ -165,7 +165,7 @@ class MyRestController extends \Ubiquity\controllers\rest\api\json\JsonRestContr
 
     #[Delete('rooms/{room}/users/{userId}', priority: 10)]
     public function leaveRoom(string $room, int $userId){
-        $roomInstance = DAO::getOne(Room::class, 'name= ?', false, [$room]);
+        $roomInstance = DAO::getOne(Room::class, 'name= ? or uuid= ?', false, [$room,$room]);
         if (isset($roomInstance)) {
             $user = DAO::getById(User::class,$userId,false);
             if (isset($user)) {

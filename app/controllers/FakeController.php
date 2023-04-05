@@ -93,7 +93,7 @@ class FakeController extends \controllers\ControllerBase {
 			$story=new Story();
 			$story->setName($this->faker->unique()->sentence(5));
 			$story->setRoom($room);
-			$story->setDescription($this->faker->paragraph);
+			$story->setDescription($this->faker->paragraph());
 			$stories[]=$story;
 			DAO::insert($story);
 		}
