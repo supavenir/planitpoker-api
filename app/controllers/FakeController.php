@@ -3,7 +3,6 @@ namespace controllers;
 
 use Faker\Factory;
 use Faker\Generator;
-use models\Configuration;
 use models\Params;
 use models\Room;
 use models\Story;
@@ -14,7 +13,6 @@ use models\Voter;
 use Ubiquity\attributes\items\router\Post;
 use Ubiquity\attributes\items\router\Route;
 use Ubiquity\orm\DAO;
-use Ubiquity\utils\http\UResponse;
 
 /**
  * Controller FakeController

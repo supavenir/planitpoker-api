@@ -15,6 +15,9 @@ EventsManager::addListener([DAOEvents::BEFORE_UPDATE,DAOEvents::BEFORE_INSERT],f
 	if ($instance instanceof \models\User) {
 		$instance->setPassword(password_hash($instance->getPassword(), PASSWORD_DEFAULT));
 	}
+    if ($instance instanceof \models\Room){
+        $instance->setUuid(\crc32($instance->getName().""));
+    }
 	TransformersManager::transformInstance($instance);
 	}
 );

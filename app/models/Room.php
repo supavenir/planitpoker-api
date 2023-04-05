@@ -33,10 +33,13 @@ class Room{
 	#[Validator(type: "notNull",constraints: [])]
 	private $points;
 
+    #[Column(name: "uuid",dbType: "varchar(100)")]
+    private $uuid;
+
 	
 	#[Column(name: "connectedUsers",dbType: "text")]
 	#[Validator(type: "notNull",constraints: [])]
-	private $connectedUsers;
+	private $connectedUsers='[]';
 
 	
 	#[OneToMany(mappedBy: "room",className: "models\\Configuration")]
@@ -199,6 +202,20 @@ class Room{
 	public function setUser($user){
 		$this->user=$user;
 	}
+
+    /**
+     * @param mixed $uuid
+     */
+    public function setUuid($uuid): void{
+        $this->uuid = $uuid;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUuid() {
+        return $this->uuid;
+    }
 
 	 public function __toString(){
 		return ($this->name??'no value').'';
