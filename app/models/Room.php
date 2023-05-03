@@ -222,17 +222,21 @@ class Room {
 		return ($this->name ?? 'no value') . '';
 	}
 
+    private function connectedUsersWithoutUser(User $user): array {
+        $connectedUsers = \json_decode($this->connectedUsers, true);
+        return array_values(\array_filter($connectedUsers, function ($u) use ($user) {
+            return $u['id'] == $user->getId();
+        }));
+    }
+
 	public function addConnectedUser(User $user): void {
-		$connectedUsers = \json_decode($this->connectedUsers, true);
+		$connectedUsers = $this->connectedUsersWithoutUser($user);
 		$connectedUsers[] = $user->_rest;
 		$this->connectedUsers = json_encode($connectedUsers);
 	}
 
 	public function removeConnectedUser(User $user): void {
-		$connectedUsers = \json_decode($this->connectedUsers, true);
-		$connectedUsers = \array_filter($connectedUsers, function ($u) use ($user) {
-			return $u['id'] != $user->getId();
-		});
-		$this->connectedUsers = \json_encode(\array_values($connectedUsers));
+		$connectedUsers = $this->connectedUsersWithoutUser($user);
+		$this->connectedUsers = \json_encode($connectedUsers);
 	}
 }
