@@ -225,7 +225,7 @@ class Room {
     private function connectedUsersWithoutUser(User $user): array {
         $connectedUsers = \json_decode($this->connectedUsers, true);
         return array_values(\array_filter($connectedUsers, function ($u) use ($user) {
-            return $u['id'] == $user->getId();
+            return $u['id'] != $user->getId();
         }));
     }
 
